@@ -1,5 +1,5 @@
 # Secrets and local configuration
-backend/src/main/resources/application.properties
+backend/src/main/resources/application-local.properties
 client/.env*
 !client/.env*.example
 .env
