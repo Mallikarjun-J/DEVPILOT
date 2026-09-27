@@ -1,0 +1,60 @@
+# ==========================================
+# DevPilot Backend Configuration (NeonDB)
+# ==========================================
+spring.application.name=backend
+server.port=8081
+
+# ------------------------------------------
+# Database: Neon Serverless PostgreSQL
+# ------------------------------------------
+# Neon connection string format:
+# jdbc:postgresql://<endpoint-id>.neon.tech/<dbname>?sslmode=require&prepareThreshold=0
+spring.datasource.url=${NEON_DATABASE_URL:jdbc:postgresql://localhost:5433/devpilot}
+spring.datasource.username=${NEON_DATABASE_USER:postgres}
+spring.datasource.password=${NEON_DATABASE_PASSWORD:postgres}
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+# Connection Pool Tuning for Neon Serverless
+spring.datasource.hikari.maximum-pool-size=10
+spring.datasource.hikari.minimum-idle=0
+spring.datasource.hikari.idle-timeout=120000
+spring.datasource.hikari.max-lifetime=300000
+spring.datasource.hikari.connection-timeout=20000
+
+# JPA / Hibernate
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.open-in-view=false
+
+# ------------------------------------------
+# Spring AI: Google Gemini (Chat & Embeddings)
+# ------------------------------------------
+spring.ai.model.chat=google-genai
+spring.ai.google.genai.api-key=${GEMINI_API_KEY:${GOOGLE_API_KEY:your-gemini-api-key}}
+spring.ai.google.genai.project-id=${GEMINI_PROJECT_ID:devpilot}
+spring.ai.google.genai.chat.options.model=gemini-3.5-flash-lite
+spring.ai.google.genai.embedding.text.model=gemini-embedding-001
+spring.ai.google.genai.embedding.text.dimensions=768
+
+# Vector Store: PGVector (Gemini text-embedding-004 has 768 dimensions)
+spring.ai.vectorstore.pgvector.initialize-schema=true
+spring.ai.vectorstore.pgvector.index-type=HNSW
+spring.ai.vectorstore.pgvector.distance-type=COSINE_DISTANCE
+spring.ai.vectorstore.pgvector.dimensions=768
+
+# ------------------------------------------
+# Security: GitHub OAuth2
+# ------------------------------------------
+spring.security.oauth2.client.registration.github.client-id=${GITHUB_CLIENT_ID:your-github-client-id}
+spring.security.oauth2.client.registration.github.client-secret=${GITHUB_CLIENT_SECRET:your-github-client-secret}
+spring.security.oauth2.client.registration.github.scope=read:user,repo
+
+# ------------------------------------------
+# Application Custom Settings
+# ------------------------------------------
+app.frontend-url=${FRONTEND_URL:http://localhost:3000}
+app.cors.allowed-origins=${CORS_ALLOWED_ORIGINS:http://localhost:3000}
+app.token-encryptor-password=${ENCRYPTION_PASSWORD:devpilot-change-me-secret-token-key}
+app.token-encryptor-salt=${ENCRYPTION_SALT:5c0744940b5c369b}
+app.indexing.max-file-bytes=61440
+app.indexing.chunk-size=2400
